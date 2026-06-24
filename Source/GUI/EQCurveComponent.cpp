@@ -326,11 +326,15 @@ int EQCurveComponent::addBandAt(float freq, float gain)
     {
         if (processor.bandParams[i].isActive()) continue;
 
+        int type = 0; // Bell
+        if (freq < 80.0f) type = 1;         // Low Cut
+        else if (freq > 8000.0f) type = 2;  // High Cut
+
         // Place the new band
         setParam       ("freq",  i, freq);
         setParam       ("gain",  i, gain);
         setParam       ("q",     i, 1.0f);
-        setChoiceParam ("type",  i, 0);    // Bell
+        setChoiceParam ("type",  i, type);
         setChoiceParam ("slope", i, 1);    // 12 dB/oct
         setChoiceParam ("route", i, 0);    // Stereo
         setBoolParam   ("bypass",i, false);
