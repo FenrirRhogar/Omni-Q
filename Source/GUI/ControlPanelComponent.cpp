@@ -214,7 +214,7 @@ void ControlPanelComponent::paint(juce::Graphics& g)
     {
         g.setColour(textLo());
         g.setFont(juce::FontOptions(12.5f));
-        g.drawText("Click anywhere on the EQ canvas to add a band  ·  Right-click a node for options",
+        g.drawText("Click anywhere on the EQ canvas to add a band  ·  Right-click to bypass  ·  Double-click to remove",
                    getLocalBounds(), juce::Justification::centred, false);
         return;
     }
