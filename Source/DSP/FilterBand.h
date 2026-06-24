@@ -27,6 +27,7 @@ struct FilterBandParameters
     std::atomic<float>* routingMode  = nullptr;
     std::atomic<float>* active       = nullptr;
     std::atomic<float>* dynEnabled   = nullptr;
+    std::atomic<float>* dynExtSc     = nullptr;
     std::atomic<float>* dynThreshold = nullptr;
     std::atomic<float>* dynRange     = nullptr;
     std::atomic<float>* dynAttack    = nullptr;
@@ -80,6 +81,11 @@ struct FilterBandParameters
     bool isDynEnabled() const noexcept
     {
         return dynEnabled->load(std::memory_order_relaxed) >= 0.5f;
+    }
+
+    bool isDynExtScEnabled() const noexcept
+    {
+        return dynExtSc->load(std::memory_order_relaxed) >= 0.5f;
     }
 
     float getDynThreshold() const noexcept
@@ -145,6 +151,7 @@ struct FilterBandParameters
         routingMode  = apvts.getRawParameterValue(paramID("route",         bandIndex));
         active       = apvts.getRawParameterValue(paramID("active",        bandIndex));
         dynEnabled   = apvts.getRawParameterValue(paramID("dyn_enabled",   bandIndex));
+        dynExtSc     = apvts.getRawParameterValue(paramID("dyn_ext_sc",    bandIndex));
         dynThreshold = apvts.getRawParameterValue(paramID("dyn_threshold", bandIndex));
         dynRange     = apvts.getRawParameterValue(paramID("dyn_range",     bandIndex));
         dynAttack    = apvts.getRawParameterValue(paramID("dyn_attack",    bandIndex));
@@ -159,6 +166,7 @@ struct FilterBandParameters
         jassert(routingMode  != nullptr);
         jassert(active       != nullptr);
         jassert(dynEnabled   != nullptr);
+        jassert(dynExtSc     != nullptr);
         jassert(dynThreshold != nullptr);
         jassert(dynRange     != nullptr);
         jassert(dynAttack    != nullptr);

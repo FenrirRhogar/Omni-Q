@@ -127,6 +127,13 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
             false
         ));
 
+        // ─── Dynamic EQ: External Sidechain (bool) ─────────────────────
+        layout.add(std::make_unique<juce::AudioParameterBool>(
+            juce::ParameterID(prefix + "dyn_ext_sc", 1),
+            bandName + "Ext Sidechain",
+            false
+        ));
+
         // ─── Dynamic EQ: Threshold ─────────────────────────────────────
         layout.add(std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID(prefix + "dyn_threshold", 1),

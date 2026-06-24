@@ -37,6 +37,7 @@ private:
 
     // ── Dynamic EQ controls ───────────────────────────────────────────────
     juce::ToggleButton dynToggle { "Dynamic" };
+    juce::ToggleButton dynScToggle { "EXT SC" };
     juce::Slider dynThreshSlider, dynRangeSlider, dynAttackSlider, dynReleaseSlider;
     juce::Label  dynThreshLabel,  dynRangeLabel,  dynAttackLabel,  dynReleaseLabel;
 
@@ -47,7 +48,7 @@ private:
     // ── APVTS Attachments ─────────────────────────────────────────────────
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>    freqAttach, gainAttach, qAttach;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment>  typeAttach, slopeAttach, routingAttach;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment>    dynToggleAttach;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment>    dynToggleAttach, dynScAttach;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment>    dynThreshAttach, dynRangeAttach,
                                                                               dynAttackAttach, dynReleaseAttach;
 

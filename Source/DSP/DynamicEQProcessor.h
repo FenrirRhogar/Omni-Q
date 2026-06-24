@@ -37,8 +37,9 @@ public:
     // Processes a block. Uses linked or unlinked processing based on parameters.
     void process(const juce::dsp::ProcessContextReplacing<float>& context);
     
-    // Processes a single sample for a specific channel (unlinked).
-    float processSample(int channel, float input);
+    // Processes a single sample for a specific channel.
+    float processSample(int channel, float input, float sidechainInput);
+
 
 private:
     void updateEnvelopeCoefficients();

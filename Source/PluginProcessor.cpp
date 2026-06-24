@@ -5,7 +5,8 @@
 OmniQAudioProcessor::OmniQAudioProcessor()
     : AudioProcessor(BusesProperties()
           .withInput ("Input",  juce::AudioChannelSet::stereo(), true)
-          .withOutput("Output", juce::AudioChannelSet::stereo(), true)),
+          .withOutput("Output", juce::AudioChannelSet::stereo(), true)
+          .withInput ("Sidechain", juce::AudioChannelSet::stereo(), false)),
       apvts(*this, nullptr, juce::Identifier("OmniQParameters"),
             OmniQ::createParameterLayout())
 {
@@ -55,6 +56,13 @@ bool OmniQAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) con
     if (mainOut != layouts.getMainInputChannelSet())
         return false;
 
+    // Optional Sidechain
+    const auto& sidechain = layouts.getChannelSet(true, 1);
+    if (sidechain != juce::AudioChannelSet::disabled() &&
+        sidechain != juce::AudioChannelSet::mono() &&
+        sidechain != juce::AudioChannelSet::stereo())
+        return false;
+
     return true;
 }
 
@@ -98,15 +106,40 @@ void OmniQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     const auto totalNumOutputChannels = getTotalNumOutputChannels();
     const auto numSamples             = buffer.getNumSamples();
 
+    // ─────────────────────────────────────────────────────────────────────
+    // Fetch sidechain pointers
+    // ─────────────────────────────────────────────────────────────────────
+    const bool hasSidechain = (getBusCount(true) > 1) && (getChannelCountOfBus(true, 1) > 0);
+    const float* scLeft = nullptr;
+    const float* scRight = nullptr;
+    if (hasSidechain)
+    {
+        auto scBus = getBusBuffer(buffer, true, 1);
+        if (scBus.getNumChannels() >= 2)
+        {
+            scLeft = scBus.getReadPointer(0);
+            scRight = scBus.getReadPointer(1);
+        }
+        else if (scBus.getNumChannels() == 1)
+        {
+            scLeft = scBus.getReadPointer(0);
+            scRight = scLeft; // Duplicate mono sidechain
+        }
+    }
+    
+    // We only process the main bus channels, but we pass sidechain samples to DynamicEQ.
+    auto mainBus = getBusBuffer(buffer, true, 0);
+    const int numMainChannels = mainBus.getNumChannels();
+
     // Clear any output channels that don't correspond to an input channel.
     for (auto ch = totalNumInputChannels; ch < totalNumOutputChannels; ++ch)
         buffer.clear(ch, 0, numSamples);
 
     // Capture pre-filter audio into the input spectrum analyzer FIFO.
     // juce::jmin guards against mono configurations where only channel 0 exists.
-    const int channelsToPush = juce::jmin(totalNumInputChannels, 2);
+    const int channelsToPush = juce::jmin(numMainChannels, 2);
     for (int ch = 0; ch < channelsToPush; ++ch)
-        inputFifo[ch].push(buffer.getReadPointer(ch), numSamples);
+        inputFifo[ch].push(mainBus.getReadPointer(ch), numSamples);
 
     // ─────────────────────────────────────────────────────────────────────
     // Per-band DSP processing: Stereo, Mid, and Side Routing
@@ -141,12 +174,12 @@ void OmniQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     }
 
     // 2. Process Audio
-    const bool isStereo = (totalNumInputChannels == 2);
+    const bool isStereo = (numMainChannels == 2);
 
     if (isStereo)
     {
-        float* left = buffer.getWritePointer(0);
-        float* right = buffer.getWritePointer(1);
+        float* left = mainBus.getWritePointer(0);
+        float* right = mainBus.getWritePointer(1);
         
         for (int i = 0; i < OmniQ::MaxBands; ++i)
         {
@@ -161,8 +194,10 @@ void OmniQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
                 {
                     for (int s = 0; s < numSamples; ++s)
                     {
-                        left[s] = dynamicBands[i].processSample(0, left[s]);
-                        right[s] = dynamicBands[i].processSample(1, right[s]);
+                        float scL = (bandParams[i].isDynExtScEnabled() && scLeft) ? scLeft[s] : left[s];
+                        float scR = (bandParams[i].isDynExtScEnabled() && scRight) ? scRight[s] : right[s];
+                        left[s] = dynamicBands[i].processSample(0, left[s], scL);
+                        right[s] = dynamicBands[i].processSample(1, right[s], scR);
                     }
                 }
                 else if (routing == OmniQ::RoutingMode::MidOnly)
@@ -171,7 +206,12 @@ void OmniQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
                     {
                         float m = (left[s] + right[s]) * 0.5f;
                         float sd = (left[s] - right[s]) * 0.5f;
-                        m = dynamicBands[i].processSample(0, m);
+                        
+                        float scM = m;
+                        if (bandParams[i].isDynExtScEnabled() && scLeft && scRight)
+                            scM = (scLeft[s] + scRight[s]) * 0.5f;
+                            
+                        m = dynamicBands[i].processSample(0, m, scM);
                         left[s] = m + sd;
                         right[s] = m - sd;
                     }
@@ -182,7 +222,12 @@ void OmniQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
                     {
                         float m = (left[s] + right[s]) * 0.5f;
                         float sd = (left[s] - right[s]) * 0.5f;
-                        sd = dynamicBands[i].processSample(0, sd);
+                        
+                        float scSd = sd;
+                        if (bandParams[i].isDynExtScEnabled() && scLeft && scRight)
+                            scSd = (scLeft[s] - scRight[s]) * 0.5f;
+                            
+                        sd = dynamicBands[i].processSample(0, sd, scSd);
                         left[s] = m + sd;
                         right[s] = m - sd;
                     }
@@ -225,7 +270,7 @@ void OmniQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     }
     else // Mono
     {
-        float* channel = buffer.getWritePointer(0);
+        float* channel = mainBus.getWritePointer(0);
         for (int i = 0; i < OmniQ::MaxBands; ++i)
         {
             if (! bandParams[i].shouldProcess()) continue;
@@ -233,7 +278,10 @@ void OmniQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
             if (bandParams[i].isDynEnabled() && bandParams[i].filterUsesGain())
             {
                 for (int s = 0; s < numSamples; ++s)
-                    channel[s] = dynamicBands[i].processSample(0, channel[s]);
+                {
+                    float scL = (bandParams[i].isDynExtScEnabled() && scLeft) ? scLeft[s] : channel[s];
+                    channel[s] = dynamicBands[i].processSample(0, channel[s], scL);
+                }
             }
             else
             {
@@ -245,9 +293,9 @@ void OmniQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     // ─────────────────────────────────────────────────────────────────────
 
     // Capture post-filter audio into the output spectrum analyzer FIFO.
-    const int channelsToCapture = juce::jmin(totalNumOutputChannels, 2);
+    const int channelsToCapture = juce::jmin(numMainChannels, 2);
     for (int ch = 0; ch < channelsToCapture; ++ch)
-        outputFifo[ch].push(buffer.getReadPointer(ch), numSamples);
+        outputFifo[ch].push(mainBus.getReadPointer(ch), numSamples);
 }
 
 //==============================================================================

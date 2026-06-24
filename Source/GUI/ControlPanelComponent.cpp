@@ -18,11 +18,15 @@ ControlPanelComponent::ControlPanelComponent(OmniQAudioProcessor& p) : processor
     setupCombo(slopeCombo,   slopeLabel,   FilterSlopeNames, "Slope");
     setupCombo(routingCombo, routingLabel, RoutingModeNames, "Route");
 
-    // Dynamic toggle
     dynToggle.setColour(juce::ToggleButton::textColourId,          textHi());
     dynToggle.setColour(juce::ToggleButton::tickColourId,          dynAccent());
     dynToggle.setColour(juce::ToggleButton::tickDisabledColourId,  textLo());
     addAndMakeVisible(dynToggle);
+
+    dynScToggle.setColour(juce::ToggleButton::textColourId,          textHi());
+    dynScToggle.setColour(juce::ToggleButton::tickColourId,          dynAccent());
+    dynScToggle.setColour(juce::ToggleButton::tickDisabledColourId,  textLo());
+    addAndMakeVisible(dynScToggle);
 
     setupDynKnob(dynThreshSlider,  dynThreshLabel,  "Thresh");
     setupDynKnob(dynRangeSlider,   dynRangeLabel,   "Range");
@@ -135,7 +139,7 @@ void ControlPanelComponent::rebuildAttachments()
 {
     freqAttach.reset(); gainAttach.reset(); qAttach.reset();
     typeAttach.reset(); slopeAttach.reset(); routingAttach.reset();
-    dynToggleAttach.reset();
+    dynToggleAttach.reset(); dynScAttach.reset();
     dynThreshAttach.reset(); dynRangeAttach.reset();
     dynAttackAttach.reset(); dynReleaseAttach.reset();
 
@@ -150,6 +154,7 @@ void ControlPanelComponent::rebuildAttachments()
     slopeAttach   = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, paramID("slope",         b), slopeCombo);
     routingAttach = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, paramID("route",         b), routingCombo);
     dynToggleAttach = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, paramID("dyn_enabled",   b), dynToggle);
+    dynScAttach     = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(apvts, paramID("dyn_ext_sc",    b), dynScToggle);
     dynThreshAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, paramID("dyn_threshold", b), dynThreshSlider);
     dynRangeAttach  = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, paramID("dyn_range",     b), dynRangeSlider);
     dynAttackAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, paramID("dyn_attack",    b), dynAttackSlider);
@@ -170,7 +175,7 @@ void ControlPanelComponent::updateVisibility()
         &typeCombo,    &typeLabel,
         &slopeCombo,   &slopeLabel,
         &routingCombo, &routingLabel,
-        &dynToggle,
+        &dynToggle,    &dynScToggle,
         &dynThreshSlider, &dynRangeSlider,
         &dynAttackSlider, &dynReleaseSlider,
         &dynThreshLabel,  &dynRangeLabel,
@@ -289,7 +294,9 @@ void ControlPanelComponent::resized()
         const int dynH  = bot - togH - lh - 2;
         const int kw    = (col3W - 4) / 4;
 
-        dynToggle.setBounds(col3X + 2, top + 1, col3W - 4, togH);
+        int halfTog = (col3W - 4) / 2;
+        dynToggle.setBounds(col3X + 2, top + 1, halfTog, togH);
+        dynScToggle.setBounds(col3X + 2 + halfTog, top + 1, halfTog, togH);
 
         int x = col3X + 2;
         int y = top + lh + togH + 2;

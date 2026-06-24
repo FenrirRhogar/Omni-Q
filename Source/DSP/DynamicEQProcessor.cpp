@@ -161,28 +161,29 @@ void DynamicEQProcessor::process(const juce::dsp::ProcessContextReplacing<float>
             auto* channelData = block.getChannelPointer(ch);
             for (size_t i = 0; i < numSamples; ++i)
             {
-                channelData[i] = processSample(static_cast<int>(ch), channelData[i]);
+                channelData[i] = processSample(static_cast<int>(ch), channelData[i], channelData[i]);
             }
         }
     }
 }
 
-float DynamicEQProcessor::processSample(int channel, float input)
+float DynamicEQProcessor::processSample(int channel, float input, float sidechainInput)
 {
     if (channel < 0 || channel >= static_cast<int>(channelStates.size()))
         return input;
 
     auto& state = channelStates[static_cast<size_t>(channel)];
     double inSample = static_cast<double>(input);
+    double scSample = static_cast<double>(sidechainInput);
 
     // 1. Calculate sidechain level
-    double sidechainInput = parameters.useRms ? (inSample * inSample) : std::abs(inSample);
+    double sidechainLevel = parameters.useRms ? (scSample * scSample) : std::abs(scSample);
 
     // 2. Update envelope
-    if (sidechainInput > state.envelopeState)
-        state.envelopeState = sidechainInput + attackCoef * (state.envelopeState - sidechainInput);
+    if (sidechainLevel > state.envelopeState)
+        state.envelopeState = sidechainLevel + attackCoef * (state.envelopeState - sidechainLevel);
     else
-        state.envelopeState = sidechainInput + releaseCoef * (state.envelopeState - sidechainInput);
+        state.envelopeState = sidechainLevel + releaseCoef * (state.envelopeState - sidechainLevel);
 
     // 3. Compute dynamic gain
     double currentLevel = parameters.useRms ? std::sqrt(std::max(state.envelopeState, 1e-12)) 
