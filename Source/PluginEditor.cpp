@@ -206,7 +206,7 @@ void ProEQAudioProcessorEditor::paint(juce::Graphics& g)
     // Logo — left of header
     g.setColour(TEXT_HI);
     g.setFont(juce::FontOptions(22.0f).withStyle("Bold"));
-    g.drawText("ProEQ", 16, 0, 120, 48, juce::Justification::centredLeft, false);
+    g.drawText("Omni-Q", 16, 0, 120, 48, juce::Justification::centredLeft, false);
 
     // Logo sub-caption
     g.setColour(TEXT_LO);

@@ -13,17 +13,17 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../.. ${CMAKE_CURRENT_BINARY_DIR}/J
 # Plugin target
 # ──────────────────────────────────────────────────────────────────────────────
 juce_add_plugin(ProEQ
-    COMPANY_NAME             "ProEQ Audio"
-    BUNDLE_ID                "com.proeqaudio.ProEQ"
+    COMPANY_NAME             "Omni Audio"
+    BUNDLE_ID                "com.omniaudio.OmniQ"
     IS_SYNTH                 FALSE
     NEEDS_MIDI_INPUT         FALSE
     NEEDS_MIDI_OUTPUT        FALSE
     IS_MIDI_EFFECT           FALSE
     EDITOR_WANTS_KEYBOARD_FOCUS FALSE
-    PLUGIN_MANUFACTURER_CODE Prqa
-    PLUGIN_CODE              Preq
+    PLUGIN_MANUFACTURER_CODE Omni
+    PLUGIN_CODE              Omnq
     FORMATS                  VST3 Standalone
-    PRODUCT_NAME             "ProEQ"
+    PRODUCT_NAME             "Omni-Q"
     COPY_PLUGIN_AFTER_BUILD  FALSE
 )
 
