@@ -117,15 +117,15 @@ void ControlPanelComponent::setupCombo(juce::ComboBox& c, juce::Label& l,
 {
     c.addItemList(items, 1);
     c.setJustificationType(juce::Justification::centred);
-    c.setColour(juce::ComboBox::backgroundColourId, border());
-    c.setColour(juce::ComboBox::textColourId,       textHi());
-    c.setColour(juce::ComboBox::outlineColourId,    border().brighter(0.3f));
-    c.setColour(juce::ComboBox::arrowColourId,      accent());
+    c.setColour(juce::ComboBox::backgroundColourId, juce::Colours::transparentBlack);
+    c.setColour(juce::ComboBox::textColourId,       textHi().withAlpha(0.85f));
+    c.setColour(juce::ComboBox::outlineColourId,    juce::Colours::transparentBlack);
+    c.setColour(juce::ComboBox::arrowColourId,      textLo().withAlpha(0.6f));
     addAndMakeVisible(c);
 
     l.setText(cap, juce::dontSendNotification);
     l.setFont(juce::FontOptions(9.5f));
-    l.setColour(juce::Label::textColourId, textLo());
+    l.setColour(juce::Label::textColourId, textLo().withAlpha(0.5f));
     l.setJustificationType(juce::Justification::centred);
     addAndMakeVisible(l);
 }
