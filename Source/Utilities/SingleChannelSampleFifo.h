@@ -4,7 +4,7 @@
 #include <array>
 #include <algorithm>
 
-namespace ProEQ
+namespace OmniQ
 {
 
 /// A lock-free, single-producer / single-consumer FIFO for streaming audio
@@ -81,4 +81,4 @@ private:
     std::array<SampleType, Capacity>     buffer {};
 };
 
-} // namespace ProEQ
+} // namespace OmniQ

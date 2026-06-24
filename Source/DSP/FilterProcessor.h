@@ -5,7 +5,7 @@
 #include "FilterBand.h"
 #include <array>
 
-namespace ProEQ
+namespace OmniQ
 {
 
 /// A real-time safe biquad filter using Transposed Direct Form II
@@ -145,4 +145,4 @@ private:
     std::array<CascadedBiquad, MaxBands> bands;
 };
 
-} // namespace ProEQ
+} // namespace OmniQ

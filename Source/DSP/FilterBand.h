@@ -4,7 +4,7 @@
 #include "Utilities/Constants.h"
 #include <atomic>
 
-namespace ProEQ
+namespace OmniQ
 {
 
 /// Holds cached pointers to the raw atomic parameter values for one EQ band.
@@ -166,4 +166,4 @@ struct FilterBandParameters
     }
 };
 
-} // namespace ProEQ
+} // namespace OmniQ

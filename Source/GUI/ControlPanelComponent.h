@@ -3,7 +3,7 @@
 #include <JuceHeader.h>
 #include "../PluginProcessor.h"
 
-namespace ProEQ
+namespace OmniQ
 {
 
 /// Always-visible bottom strip.
@@ -14,7 +14,7 @@ class ControlPanelComponent : public juce::Component
 public:
     static constexpr int PanelHeight = 120;
 
-    explicit ControlPanelComponent(ProEQAudioProcessor& processor);
+    explicit ControlPanelComponent(OmniQAudioProcessor& processor);
     ~ControlPanelComponent() override;
 
     void paint(juce::Graphics& g) override;
@@ -24,7 +24,7 @@ public:
     int  getSelectedBand() const noexcept { return currentBandIndex; }
 
 private:
-    ProEQAudioProcessor& processor;
+    OmniQAudioProcessor& processor;
     int currentBandIndex = -1;
 
     // ── Core parameter knobs ──────────────────────────────────────────────
@@ -69,4 +69,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ControlPanelComponent)
 };
 
-} // namespace ProEQ
+} // namespace OmniQ

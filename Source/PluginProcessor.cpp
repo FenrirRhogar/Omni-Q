@@ -2,48 +2,48 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-ProEQAudioProcessor::ProEQAudioProcessor()
+OmniQAudioProcessor::OmniQAudioProcessor()
     : AudioProcessor(BusesProperties()
           .withInput ("Input",  juce::AudioChannelSet::stereo(), true)
           .withOutput("Output", juce::AudioChannelSet::stereo(), true)),
-      apvts(*this, nullptr, juce::Identifier("ProEQParameters"),
-            ProEQ::createParameterLayout())
+      apvts(*this, nullptr, juce::Identifier("OmniQParameters"),
+            OmniQ::createParameterLayout())
 {
     // Bind all 24 band parameter caches to the APVTS.
     // After this loop every FilterBandParameters struct holds 13 non-null
     // pointers into the APVTS atomic storage, ready for audio-thread reads.
-    for (int i = 0; i < ProEQ::MaxBands; ++i)
+    for (int i = 0; i < OmniQ::MaxBands; ++i)
         bandParams[static_cast<size_t>(i)].bindToAPVTS(apvts, i);
 }
 
-ProEQAudioProcessor::~ProEQAudioProcessor() = default;
+OmniQAudioProcessor::~OmniQAudioProcessor() = default;
 
 //==============================================================================
-const juce::String ProEQAudioProcessor::getName() const
+const juce::String OmniQAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool   ProEQAudioProcessor::acceptsMidi()  const { return false; }
-bool   ProEQAudioProcessor::producesMidi() const { return false; }
-bool   ProEQAudioProcessor::isMidiEffect() const { return false; }
-double ProEQAudioProcessor::getTailLengthSeconds() const { return 0.0; }
+bool   OmniQAudioProcessor::acceptsMidi()  const { return false; }
+bool   OmniQAudioProcessor::producesMidi() const { return false; }
+bool   OmniQAudioProcessor::isMidiEffect() const { return false; }
+double OmniQAudioProcessor::getTailLengthSeconds() const { return 0.0; }
 
-int  ProEQAudioProcessor::getNumPrograms()                        { return 1; }
-int  ProEQAudioProcessor::getCurrentProgram()                     { return 0; }
-void ProEQAudioProcessor::setCurrentProgram(int /*index*/)        {}
-const juce::String ProEQAudioProcessor::getProgramName(int /*i*/) { return {}; }
-void ProEQAudioProcessor::changeProgramName(int, const juce::String&) {}
+int  OmniQAudioProcessor::getNumPrograms()                        { return 1; }
+int  OmniQAudioProcessor::getCurrentProgram()                     { return 0; }
+void OmniQAudioProcessor::setCurrentProgram(int /*index*/)        {}
+const juce::String OmniQAudioProcessor::getProgramName(int /*i*/) { return {}; }
+void OmniQAudioProcessor::changeProgramName(int, const juce::String&) {}
 
-bool ProEQAudioProcessor::hasEditor() const { return true; }
+bool OmniQAudioProcessor::hasEditor() const { return true; }
 
-juce::AudioProcessorEditor* ProEQAudioProcessor::createEditor()
+juce::AudioProcessorEditor* OmniQAudioProcessor::createEditor()
 {
-    return new ProEQAudioProcessorEditor(*this);
+    return new OmniQAudioProcessorEditor(*this);
 }
 
 //==============================================================================
-bool ProEQAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
+bool OmniQAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
 {
     const auto& mainOut = layouts.getMainOutputChannelSet();
 
@@ -59,7 +59,7 @@ bool ProEQAudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) con
 }
 
 //==============================================================================
-void ProEQAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
+void OmniQAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
     currentSampleRate = sampleRate;
     currentBlockSize  = samplesPerBlock;
@@ -78,7 +78,7 @@ void ProEQAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     spec.maximumBlockSize = static_cast<juce::uint32>(samplesPerBlock);
     spec.numChannels = 2;
 
-    for (int i = 0; i < ProEQ::MaxBands; ++i)
+    for (int i = 0; i < OmniQ::MaxBands; ++i)
     {
         leftStaticBands[i].prepare(sampleRate);
         rightStaticBands[i].prepare(sampleRate);
@@ -86,10 +86,10 @@ void ProEQAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     }
 }
 
-void ProEQAudioProcessor::releaseResources() {}
+void OmniQAudioProcessor::releaseResources() {}
 
 //==============================================================================
-void ProEQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
+void OmniQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
                                         juce::MidiBuffer& /*midiMessages*/)
 {
     juce::ScopedNoDenormals noDenormals;
@@ -113,14 +113,14 @@ void ProEQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     // ─────────────────────────────────────────────────────────────────────
 
     // 1. Update filter coefficients for all active bands
-    for (int i = 0; i < ProEQ::MaxBands; ++i)
+    for (int i = 0; i < OmniQ::MaxBands; ++i)
     {
         if (! bandParams[i].shouldProcess()) continue;
         
         bool useDynamic = bandParams[i].isDynEnabled() && bandParams[i].filterUsesGain();
         if (useDynamic)
         {
-            ProEQ::DynamicEQBandParameters dParams;
+            OmniQ::DynamicEQBandParameters dParams;
             dParams.frequency = bandParams[i].getFrequency();
             dParams.q = bandParams[i].getQ();
             dParams.staticGainDb = bandParams[i].getGain();
@@ -130,7 +130,7 @@ void ProEQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
             dParams.releaseMs = bandParams[i].getDynReleaseMs();
             dParams.ratio = 2.0; // Hardcoded default, can be expanded later
             dParams.useRms = false; // Peak detection
-            dParams.linked = (bandParams[i].getRoutingMode() == ProEQ::RoutingMode::Stereo);
+            dParams.linked = (bandParams[i].getRoutingMode() == OmniQ::RoutingMode::Stereo);
             dynamicBands[i].setParameters(dParams);
         }
         else
@@ -148,7 +148,7 @@ void ProEQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
         float* left = buffer.getWritePointer(0);
         float* right = buffer.getWritePointer(1);
         
-        for (int i = 0; i < ProEQ::MaxBands; ++i)
+        for (int i = 0; i < OmniQ::MaxBands; ++i)
         {
             if (! bandParams[i].shouldProcess()) continue;
             
@@ -157,7 +157,7 @@ void ProEQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
             
             if (useDynamic)
             {
-                if (routing == ProEQ::RoutingMode::Stereo)
+                if (routing == OmniQ::RoutingMode::Stereo)
                 {
                     for (int s = 0; s < numSamples; ++s)
                     {
@@ -165,7 +165,7 @@ void ProEQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
                         right[s] = dynamicBands[i].processSample(1, right[s]);
                     }
                 }
-                else if (routing == ProEQ::RoutingMode::MidOnly)
+                else if (routing == OmniQ::RoutingMode::MidOnly)
                 {
                     for (int s = 0; s < numSamples; ++s)
                     {
@@ -190,7 +190,7 @@ void ProEQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
             }
             else
             {
-                if (routing == ProEQ::RoutingMode::Stereo)
+                if (routing == OmniQ::RoutingMode::Stereo)
                 {
                     for (int s = 0; s < numSamples; ++s)
                     {
@@ -198,7 +198,7 @@ void ProEQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
                         right[s] = rightStaticBands[i].processSample(right[s]);
                     }
                 }
-                else if (routing == ProEQ::RoutingMode::MidOnly)
+                else if (routing == OmniQ::RoutingMode::MidOnly)
                 {
                     for (int s = 0; s < numSamples; ++s)
                     {
@@ -226,7 +226,7 @@ void ProEQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
     else // Mono
     {
         float* channel = buffer.getWritePointer(0);
-        for (int i = 0; i < ProEQ::MaxBands; ++i)
+        for (int i = 0; i < OmniQ::MaxBands; ++i)
         {
             if (! bandParams[i].shouldProcess()) continue;
             
@@ -251,7 +251,7 @@ void ProEQAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer,
 }
 
 //==============================================================================
-void ProEQAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
+void OmniQAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
 {
     // Serialize the entire APVTS state tree to XML → binary.
     auto state = apvts.copyState();
@@ -259,7 +259,7 @@ void ProEQAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
     copyXmlToBinary(*xml, destData);
 }
 
-void ProEQAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
+void OmniQAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 {
     // Deserialize binary → XML → ValueTree and replace the APVTS state.
     std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
@@ -271,5 +271,5 @@ void ProEQAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 //==============================================================================
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new ProEQAudioProcessor();
+    return new OmniQAudioProcessor();
 }

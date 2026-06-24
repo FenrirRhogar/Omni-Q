@@ -2,7 +2,7 @@
 #include <cmath>
 #include <algorithm>
 
-namespace ProEQ
+namespace OmniQ
 {
 
 void CascadedBiquad::updateParameters(const FilterBandParameters& params) noexcept
@@ -186,4 +186,4 @@ void CascadedBiquad::updateParameters(const FilterBandParameters& params) noexce
     }
 }
 
-} // namespace ProEQ
+} // namespace OmniQ

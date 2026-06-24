@@ -8,33 +8,33 @@
 #include "Utilities/PresetManager.h"
 
 //==============================================================================
-/// ProEQ top-level editor. Owns:
+/// OmniQ top-level editor. Owns:
 ///   - TopBarComponent  (logo | preset browser | output gain | bypass)
 ///   - EQCurveComponent (spectrum + interactive curve + nodes)
 ///   - ControlPanelComponent (per-band strip, docked at the bottom)
-class ProEQAudioProcessorEditor final : public juce::AudioProcessorEditor
+class OmniQAudioProcessorEditor final : public juce::AudioProcessorEditor
 {
 public:
-    explicit ProEQAudioProcessorEditor(ProEQAudioProcessor&);
-    ~ProEQAudioProcessorEditor() override;
+    explicit OmniQAudioProcessorEditor(OmniQAudioProcessor&);
+    ~OmniQAudioProcessorEditor() override;
 
     void paint(juce::Graphics&) override;
     void resized() override;
 
 private:
-    ProEQAudioProcessor& processorRef;
+    OmniQAudioProcessor& processorRef;
 
     // ── Preset system ────────────────────────────────────────────────────
-    std::unique_ptr<ProEQ::PresetManager> presetManager;
+    std::unique_ptr<OmniQ::PresetManager> presetManager;
 
     // ── Spectrum thread ──────────────────────────────────────────────────
-    std::unique_ptr<ProEQ::SpectrumAnalyzer> analyzer;
+    std::unique_ptr<OmniQ::SpectrumAnalyzer> analyzer;
 
     // ── Main display ─────────────────────────────────────────────────────
-    std::unique_ptr<ProEQ::EQCurveComponent> eqCurve;
+    std::unique_ptr<OmniQ::EQCurveComponent> eqCurve;
 
     // ── Per-band bottom strip ─────────────────────────────────────────────
-    std::unique_ptr<ProEQ::ControlPanelComponent> controlPanel;
+    std::unique_ptr<OmniQ::ControlPanelComponent> controlPanel;
 
     // ── Top-bar UI components ─────────────────────────────────────────────
     juce::ComboBox presetCombo;
@@ -56,5 +56,5 @@ private:
 
     void paintBackground(juce::Graphics& g);
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ProEQAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OmniQAudioProcessorEditor)
 };

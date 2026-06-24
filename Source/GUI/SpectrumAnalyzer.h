@@ -6,7 +6,7 @@
 #include <array>
 #include <atomic>
 
-namespace ProEQ
+namespace OmniQ
 {
 
 /// A background thread that computes FFTs for the spectrum analyzer,
@@ -52,4 +52,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SpectrumAnalyzer)
 };
 
-} // namespace ProEQ
+} // namespace OmniQ

@@ -1,10 +1,10 @@
 #include "ControlPanelComponent.h"
 #include "../Utilities/Constants.h"
 
-namespace ProEQ
+namespace OmniQ
 {
 
-ControlPanelComponent::ControlPanelComponent(ProEQAudioProcessor& p) : processor(p)
+ControlPanelComponent::ControlPanelComponent(OmniQAudioProcessor& p) : processor(p)
 {
     setupKnob(freqSlider, freqLabel, "Frequency");
     freqSlider.setSkewFactorFromMidPoint(1000.f);
@@ -307,4 +307,4 @@ void ControlPanelComponent::resized()
     }
 }
 
-} // namespace ProEQ
+} // namespace OmniQ

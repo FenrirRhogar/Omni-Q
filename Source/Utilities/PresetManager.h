@@ -3,7 +3,7 @@
 #include <JuceHeader.h>
 #include <vector>
 
-namespace ProEQ
+namespace OmniQ
 {
 
 /// Per-band parameter data for a preset — plain POD, easy to construct.
@@ -36,7 +36,7 @@ struct Preset
 
 /// Manages factory and user presets.
 /// Factory presets are hard-coded in the .cpp.
-/// User presets are stored as .xml files in ~/Documents/ProEQ/Presets/.
+/// User presets are stored as .xml files in ~/Documents/OmniQ/Presets/.
 class PresetManager
 {
 public:
@@ -85,4 +85,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PresetManager)
 };
 
-} // namespace ProEQ
+} // namespace OmniQ

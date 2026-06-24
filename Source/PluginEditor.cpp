@@ -20,24 +20,24 @@ namespace
 //──────────────────────────────────────────────────────────────────────────────
 // Constructor / destructor
 //──────────────────────────────────────────────────────────────────────────────
-ProEQAudioProcessorEditor::ProEQAudioProcessorEditor(ProEQAudioProcessor& p)
+OmniQAudioProcessorEditor::OmniQAudioProcessorEditor(OmniQAudioProcessor& p)
     : AudioProcessorEditor(&p), processorRef(p)
 {
     setResizable(true, true);
     setResizeLimits(800, 440, 2560, 1440);
 
     // ── Preset system ────────────────────────────────────────────────────
-    presetManager = std::make_unique<ProEQ::PresetManager>(processorRef.apvts);
+    presetManager = std::make_unique<OmniQ::PresetManager>(processorRef.apvts);
 
     // ── Spectrum background thread ────────────────────────────────────────
-    analyzer = std::make_unique<ProEQ::SpectrumAnalyzer>(processorRef.inputFifo, processorRef.outputFifo);
+    analyzer = std::make_unique<OmniQ::SpectrumAnalyzer>(processorRef.inputFifo, processorRef.outputFifo);
 
     // ── EQ Curve ──────────────────────────────────────────────────────────
-    eqCurve = std::make_unique<ProEQ::EQCurveComponent>(processorRef, *analyzer);
+    eqCurve = std::make_unique<OmniQ::EQCurveComponent>(processorRef, *analyzer);
     addAndMakeVisible(*eqCurve);
 
     // ── Control strip ─────────────────────────────────────────────────────
-    controlPanel = std::make_unique<ProEQ::ControlPanelComponent>(processorRef);
+    controlPanel = std::make_unique<OmniQ::ControlPanelComponent>(processorRef);
     addAndMakeVisible(*controlPanel);
 
     eqCurve->onNodeSelected = [this](int bandIndex)
@@ -52,12 +52,12 @@ ProEQAudioProcessorEditor::ProEQAudioProcessorEditor(ProEQAudioProcessor& p)
     setSize(960, 560);
 }
 
-ProEQAudioProcessorEditor::~ProEQAudioProcessorEditor() = default;
+OmniQAudioProcessorEditor::~OmniQAudioProcessorEditor() = default;
 
 //──────────────────────────────────────────────────────────────────────────────
 // Top-bar construction helpers
 //──────────────────────────────────────────────────────────────────────────────
-void ProEQAudioProcessorEditor::buildTopBar()
+void OmniQAudioProcessorEditor::buildTopBar()
 {
     // ── Preset ComboBox ───────────────────────────────────────────────────
     presetCombo.setJustificationType(juce::Justification::centred);
@@ -104,7 +104,7 @@ void ProEQAudioProcessorEditor::buildTopBar()
     resetBtn.onClick      = [this] { onResetPreset(); };
 }
 
-void ProEQAudioProcessorEditor::populatePresetCombo()
+void OmniQAudioProcessorEditor::populatePresetCombo()
 {
     presetCombo.clear(juce::dontSendNotification);
 
@@ -127,14 +127,14 @@ void ProEQAudioProcessorEditor::populatePresetCombo()
                               juce::dontSendNotification);
 }
 
-void ProEQAudioProcessorEditor::onPresetComboChanged()
+void OmniQAudioProcessorEditor::onPresetComboChanged()
 {
     const int selectedId = presetCombo.getSelectedId();
     if (selectedId > 0)
         presetManager->loadPreset(selectedId - 1);
 }
 
-void ProEQAudioProcessorEditor::onSavePreset()
+void OmniQAudioProcessorEditor::onSavePreset()
 {
     auto* dialog = new juce::AlertWindow("Save Preset",
                                           "Enter a name for this preset:",
@@ -161,7 +161,7 @@ void ProEQAudioProcessorEditor::onSavePreset()
         }), true);
 }
 
-void ProEQAudioProcessorEditor::onResetPreset()
+void OmniQAudioProcessorEditor::onResetPreset()
 {
     presetManager->loadPreset(0); // Load "Flat"
     presetCombo.setSelectedId(1, juce::dontSendNotification);
@@ -170,7 +170,7 @@ void ProEQAudioProcessorEditor::onResetPreset()
 //──────────────────────────────────────────────────────────────────────────────
 // paint — draws the full chrome: background, header bar, borders
 //──────────────────────────────────────────────────────────────────────────────
-void ProEQAudioProcessorEditor::paintBackground(juce::Graphics& g)
+void OmniQAudioProcessorEditor::paintBackground(juce::Graphics& g)
 {
     auto bounds = getLocalBounds().toFloat();
 
@@ -194,12 +194,12 @@ void ProEQAudioProcessorEditor::paintBackground(juce::Graphics& g)
     g.fillRect(juce::Rectangle<float>(0.0f, 48.0f, static_cast<float>(getWidth()), 2.0f));
 
     // Footer divider above control strip
-    const float footerY = static_cast<float>(getHeight()) - ProEQ::ControlPanelComponent::PanelHeight - 1.0f;
+    const float footerY = static_cast<float>(getHeight()) - OmniQ::ControlPanelComponent::PanelHeight - 1.0f;
     g.setColour(BORDER);
     g.fillRect(juce::Rectangle<float>(0.0f, footerY, static_cast<float>(getWidth()), 1.0f));
 }
 
-void ProEQAudioProcessorEditor::paint(juce::Graphics& g)
+void OmniQAudioProcessorEditor::paint(juce::Graphics& g)
 {
     paintBackground(g);
 
@@ -221,7 +221,7 @@ void ProEQAudioProcessorEditor::paint(juce::Graphics& g)
 //──────────────────────────────────────────────────────────────────────────────
 // resized — layout all children
 //──────────────────────────────────────────────────────────────────────────────
-void ProEQAudioProcessorEditor::resized()
+void OmniQAudioProcessorEditor::resized()
 {
     auto area = getLocalBounds();
 
@@ -230,7 +230,7 @@ void ProEQAudioProcessorEditor::resized()
     layoutTopBar(headerArea);
 
     // ── Bottom control strip ──────────────────────────────────────────────
-    auto footerArea = area.removeFromBottom(ProEQ::ControlPanelComponent::PanelHeight);
+    auto footerArea = area.removeFromBottom(OmniQ::ControlPanelComponent::PanelHeight);
     if (controlPanel)
         controlPanel->setBounds(footerArea);
 
@@ -239,7 +239,7 @@ void ProEQAudioProcessorEditor::resized()
         eqCurve->setBounds(area);
 }
 
-void ProEQAudioProcessorEditor::layoutTopBar(juce::Rectangle<int>& area)
+void OmniQAudioProcessorEditor::layoutTopBar(juce::Rectangle<int>& area)
 {
     // Logo occupies fixed left region — skip 160 px
     area.removeFromLeft(160);

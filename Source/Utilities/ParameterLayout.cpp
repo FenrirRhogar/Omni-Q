@@ -1,7 +1,7 @@
 #include "ParameterLayout.h"
 #include "Constants.h"
 
-namespace ProEQ
+namespace OmniQ
 {
 
 juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
@@ -211,4 +211,4 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
     return layout;
 }
 
-} // namespace ProEQ
+} // namespace OmniQ

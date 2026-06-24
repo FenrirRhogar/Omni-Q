@@ -9,13 +9,13 @@
 #include "DSP/DynamicEQProcessor.h"
 
 //==============================================================================
-/// ProEQ audio processor — manages 24 independent parametric EQ bands,
+/// OmniQ audio processor — manages 24 independent parametric EQ bands,
 /// a lock-free spectrum analyzer FIFO, and full APVTS state persistence.
-class ProEQAudioProcessor final : public juce::AudioProcessor
+class OmniQAudioProcessor final : public juce::AudioProcessor
 {
 public:
-    ProEQAudioProcessor();
-    ~ProEQAudioProcessor() override;
+    OmniQAudioProcessor();
+    ~OmniQAudioProcessor() override;
 
     //==========================================================================
     // juce::AudioProcessor overrides
@@ -51,12 +51,12 @@ public:
     juce::AudioProcessorValueTreeState apvts;
 
     /// Cached parameter pointers for every band, bound once at construction.
-    std::array<ProEQ::FilterBandParameters, ProEQ::MaxBands> bandParams;
+    std::array<OmniQ::FilterBandParameters, OmniQ::MaxBands> bandParams;
 
     /// Lock-free FIFOs feeding the spectrum analyzer.
     /// Index 0 = left channel, index 1 = right channel.
-    ProEQ::SingleChannelSampleFifo<float> inputFifo[2];
-    ProEQ::SingleChannelSampleFifo<float> outputFifo[2];
+    OmniQ::SingleChannelSampleFifo<float> inputFifo[2];
+    OmniQ::SingleChannelSampleFifo<float> outputFifo[2];
 
     /// Current playback sample rate (safe to read from any thread after prepare).
     double getSampleRate() const noexcept { return currentSampleRate; }
@@ -66,11 +66,11 @@ private:
     int    currentBlockSize   = 512;
 
     // Static EQ Processors (one per channel per band)
-    std::array<ProEQ::CascadedBiquad, ProEQ::MaxBands> leftStaticBands;
-    std::array<ProEQ::CascadedBiquad, ProEQ::MaxBands> rightStaticBands;
+    std::array<OmniQ::CascadedBiquad, OmniQ::MaxBands> leftStaticBands;
+    std::array<OmniQ::CascadedBiquad, OmniQ::MaxBands> rightStaticBands;
     
     // Dynamic EQ Processors (each can handle stereo internally)
-    std::array<ProEQ::DynamicEQProcessor, ProEQ::MaxBands> dynamicBands;
+    std::array<OmniQ::DynamicEQProcessor, OmniQ::MaxBands> dynamicBands;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ProEQAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OmniQAudioProcessor)
 };

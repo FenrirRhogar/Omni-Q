@@ -2,7 +2,7 @@
 #include <cmath>
 #include <algorithm>
 
-namespace ProEQ
+namespace OmniQ
 {
 
 DynamicEQProcessor::DynamicEQProcessor()
@@ -224,4 +224,4 @@ float DynamicEQProcessor::processSample(int channel, float input)
     return static_cast<float>(y);
 }
 
-} // namespace ProEQ
+} // namespace OmniQ

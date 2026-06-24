@@ -4,7 +4,7 @@
 #include <array>
 #include <cstdint>
 
-namespace ProEQ
+namespace OmniQ
 {
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -186,4 +186,4 @@ inline const std::array<juce::Colour, MaxBands> BandColours = {{
     juce::Colour(0xFF448aff), juce::Colour(0xFFd500f9), juce::Colour(0xFFff1744)
 }};
 
-} // namespace ProEQ
+} // namespace OmniQ

@@ -1,7 +1,7 @@
 #include "PresetManager.h"
 #include "Constants.h"
 
-namespace ProEQ
+namespace OmniQ
 {
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -158,14 +158,14 @@ void PresetManager::applyPreset(const Preset& p)
 juce::File PresetManager::getUserPresetsDirectory() const
 {
     auto dir = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory)
-                   .getChildFile("ProEQ").getChildFile("Presets");
+                   .getChildFile("OmniQ").getChildFile("Presets");
     dir.createDirectory();
     return dir;
 }
 
 juce::XmlElement* PresetManager::presetToXml(const Preset& p)
 {
-    auto* root = new juce::XmlElement("ProEQPreset");
+    auto* root = new juce::XmlElement("OmniQPreset");
     root->setAttribute("name",     p.name);
     root->setAttribute("category", p.category);
 
@@ -193,7 +193,7 @@ juce::XmlElement* PresetManager::presetToXml(const Preset& p)
 
 bool PresetManager::xmlToPreset(const juce::XmlElement& xml, Preset& out)
 {
-    if (! xml.hasTagName("ProEQPreset")) return false;
+    if (! xml.hasTagName("OmniQPreset")) return false;
 
     out.name     = xml.getStringAttribute("name",     "Unnamed");
     out.category = xml.getStringAttribute("category", "User");
@@ -437,4 +437,4 @@ void PresetManager::buildFactoryPresets()
     }));
 }
 
-} // namespace ProEQ
+} // namespace OmniQ

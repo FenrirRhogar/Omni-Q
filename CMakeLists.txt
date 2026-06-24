@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(ProEQ VERSION 1.0.0 LANGUAGES CXX)
+project(OmniQ VERSION 1.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -12,7 +12,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../.. ${CMAKE_CURRENT_BINARY_DIR}/J
 # ──────────────────────────────────────────────────────────────────────────────
 # Plugin target
 # ──────────────────────────────────────────────────────────────────────────────
-juce_add_plugin(ProEQ
+juce_add_plugin(OmniQ
     COMPANY_NAME             "fenrikos"
     BUNDLE_ID                "com.omniaudio.OmniQ"
     IS_SYNTH                 FALSE
@@ -27,12 +27,12 @@ juce_add_plugin(ProEQ
     COPY_PLUGIN_AFTER_BUILD  FALSE
 )
 
-juce_generate_juce_header(ProEQ)
+juce_generate_juce_header(OmniQ)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Source files  (add new .cpp files here as phases are implemented)
 # ──────────────────────────────────────────────────────────────────────────────
-target_sources(ProEQ PRIVATE
+target_sources(OmniQ PRIVATE
     Source/PluginProcessor.cpp
     Source/PluginEditor.cpp
     Source/Utilities/ParameterLayout.cpp
@@ -44,7 +44,7 @@ target_sources(ProEQ PRIVATE
     Source/GUI/ControlPanelComponent.cpp
 )
 
-target_include_directories(ProEQ
+target_include_directories(OmniQ
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/Source
 )
@@ -52,7 +52,7 @@ target_include_directories(ProEQ
 # ──────────────────────────────────────────────────────────────────────────────
 # Compile definitions
 # ──────────────────────────────────────────────────────────────────────────────
-target_compile_definitions(ProEQ
+target_compile_definitions(OmniQ
     PUBLIC
         JUCE_WEB_BROWSER=0
         JUCE_USE_CURL=0
@@ -62,7 +62,7 @@ target_compile_definitions(ProEQ
 # ──────────────────────────────────────────────────────────────────────────────
 # Linked JUCE modules
 # ──────────────────────────────────────────────────────────────────────────────
-target_link_libraries(ProEQ
+target_link_libraries(OmniQ
     PRIVATE
         juce::juce_audio_basics
         juce::juce_audio_devices
