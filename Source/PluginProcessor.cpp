@@ -6,7 +6,7 @@ OmniQAudioProcessor::OmniQAudioProcessor()
     : AudioProcessor(BusesProperties()
           .withInput ("Input",  juce::AudioChannelSet::stereo(), true)
           .withOutput("Output", juce::AudioChannelSet::stereo(), true)
-          .withInput ("Sidechain", juce::AudioChannelSet::stereo(), false)),
+          .withInput ("Sidechain", juce::AudioChannelSet::stereo(), true)),
       apvts(*this, nullptr, juce::Identifier("OmniQParameters"),
             OmniQ::createParameterLayout())
 {

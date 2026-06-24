@@ -126,6 +126,8 @@ void DynamicEQProcessor::process(const juce::dsp::ProcessContextReplacing<float>
                     dynGainDb = std::clamp(dynGainDb, 0.0, parameters.rangeDb);
             }
 
+            currentDynGainDb.store(static_cast<float>(dynGainDb), std::memory_order_relaxed);
+
             double totalGainDb = parameters.staticGainDb + dynGainDb;
 
             // 4. Update filter coefficients for the current sample
@@ -203,6 +205,8 @@ float DynamicEQProcessor::processSample(int channel, float input, float sidechai
         else
             dynGainDb = std::clamp(dynGainDb, 0.0, parameters.rangeDb);
     }
+
+    currentDynGainDb.store(static_cast<float>(dynGainDb), std::memory_order_relaxed);
 
     double totalGainDb = parameters.staticGainDb + dynGainDb;
 

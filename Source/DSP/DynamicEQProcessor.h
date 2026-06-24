@@ -40,8 +40,11 @@ public:
     // Processes a single sample for a specific channel.
     float processSample(int channel, float input, float sidechainInput);
 
+    // Returns the current dynamic gain reduction in dB for GUI purposes.
+    float getCurrentDynGainDb() const { return currentDynGainDb.load(std::memory_order_relaxed); }
 
 private:
+    std::atomic<float> currentDynGainDb { 0.0f };
     void updateEnvelopeCoefficients();
     void updateFilterBase();
 

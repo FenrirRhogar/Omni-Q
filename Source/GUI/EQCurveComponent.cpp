@@ -137,7 +137,7 @@ void EQCurveComponent::drawSpectrum(juce::Graphics& g, juce::Rectangle<float> b)
             if (freq < MinFrequency || freq > MaxFrequency) continue;
 
             float x = getPositionForFrequency(static_cast<float>(freq), b.getWidth());
-            float y = juce::jmap(spec[i], -100.f, 12.f, b.getBottom(), b.getY());
+            float y = juce::jmap(spec[i], -90.f, 0.f, b.getBottom(), b.getY());
             y = juce::jlimit(b.getY(), b.getBottom(), y);
 
             if (!started) { p.startNewSubPath(x, b.getBottom()); p.lineTo(x, y); started = true; }
@@ -215,6 +215,28 @@ void EQCurveComponent::drawNodes(juce::Graphics& g, juce::Rectangle<float> b)
         juce::Colour col = bypassed
                             ? juce::Colours::grey.withAlpha(0.6f)
                             : BandColours[static_cast<size_t>(i)];
+
+        // Dynamic Gain feedback
+        float dynGain = 0.0f;
+        if (processor.bandParams[i].isDynEnabled() && processor.bandParams[i].filterUsesGain())
+            dynGain = processor.getDynamicGainDb(i);
+
+        if (std::abs(dynGain) > 0.01f && !bypassed)
+        {
+            float yDyn = getPositionForGain(gain + dynGain, b.getHeight());
+            
+            // Draw a vertical line from static node to dynamic node
+            g.setColour(col.withAlpha(0.5f));
+            g.drawLine(x, y, x, yDyn, 2.0f);
+
+            // Draw dynamic ring
+            g.setColour(col);
+            g.drawEllipse(x - r, yDyn - r, r * 2.f, r * 2.f, 2.0f);
+            
+            // Draw a subtle fill
+            g.setColour(col.withAlpha(0.3f));
+            g.fillEllipse(x - r, yDyn - r, r * 2.f, r * 2.f);
+        }
 
         // Glow halo
         g.setColour(col.withAlpha(0.15f));

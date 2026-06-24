@@ -106,9 +106,10 @@ void SpectrumAnalyzer::processFifo(SingleChannelSampleFifo<float>& fifo, int cha
 
         for (int i = 0; i < FFTSize / 2; ++i)
         {
-            // Calculate dB
+            // Calculate dB (normalize by FFTSize to get proper dBFS)
             float mag = fftData[i];
-            float db = juce::Decibels::gainToDecibels(mag, -100.0f);
+            float normalizedMag = mag / static_cast<float>(FFTSize);
+            float db = juce::Decibels::gainToDecibels(normalizedMag, -100.0f);
 
             // Apply exponential decay
             if (db > currentMag[i])

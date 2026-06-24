@@ -59,6 +59,8 @@ ControlPanelComponent::ControlPanelComponent(OmniQAudioProcessor& p) : processor
             param->setValueNotifyingHost(bypassBtn.getToggleState() ? 1.f : 0.f);
     };
 
+    dynToggle.onClick = [this] { updateVisibility(); };
+
     updateVisibility();
 }
 
@@ -185,6 +187,16 @@ void ControlPanelComponent::updateVisibility()
 
     for (auto* c : all)
         c->setVisible(has);
+
+    if (has)
+    {
+        const bool dynOn = dynToggle.getToggleState();
+        dynScToggle.setEnabled(dynOn);
+        dynThreshSlider.setEnabled(dynOn);
+        dynRangeSlider.setEnabled(dynOn);
+        dynAttackSlider.setEnabled(dynOn);
+        dynReleaseSlider.setEnabled(dynOn);
+    }
 }
 
 //──────────────────────────────────────────────────────────────────────────────

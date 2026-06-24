@@ -61,6 +61,14 @@ public:
     /// Current playback sample rate (safe to read from any thread after prepare).
     double getSampleRate() const noexcept { return currentSampleRate; }
 
+    /// Read the current dynamic gain reduction for GUI visual feedback.
+    float getDynamicGainDb(int bandIndex) const noexcept 
+    { 
+        if (bandIndex >= 0 && bandIndex < OmniQ::MaxBands)
+            return dynamicBands[static_cast<size_t>(bandIndex)].getCurrentDynGainDb();
+        return 0.0f;
+    }
+
 private:
     double currentSampleRate  = 44100.0;
     int    currentBlockSize   = 512;
