@@ -62,3 +62,9 @@ cmake --build build --config Release --parallel
 Once compiled, the plugins will be located at:
 - VST3: `build/AxisEQ_artefacts/Release/VST3/AxisEQ.vst3`
 - AU: `build/AxisEQ_artefacts/Release/AU/AxisEQ.component`
+
+## ☕ Support the Project
+
+AxisEQ is completely free and open-source. However, if you use it in your mixes and find it helpful, please consider **[buying me a coffee on Gumroad!](https://fenrikos.gumroad.com/l/axiseq)** 
+
+Your support helps keep this project alive and funds the development of future audio plugins!
