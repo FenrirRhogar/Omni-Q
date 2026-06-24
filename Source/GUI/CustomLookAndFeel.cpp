@@ -1,6 +1,6 @@
 #include "CustomLookAndFeel.h"
 
-namespace OmniQ
+namespace AxisEQ
 {
 
 CustomLookAndFeel::CustomLookAndFeel()
@@ -119,4 +119,4 @@ void CustomLookAndFeel::drawPopupMenuItem(juce::Graphics& g, const juce::Rectang
     }
 }
 
-} // namespace OmniQ
+} // namespace AxisEQ

@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>Omni-Q</h1>
+  <h1>AxisEQ</h1>
   <p><b>A Premium 24-Band Dynamic Equalizer Plugin</b></p>
 </div>
 
@@ -7,7 +7,7 @@
 
 ## 🎛️ Overview
 
-**Omni-Q** is a professional-grade, high-performance parametric dynamic equalizer audio plugin built with JUCE. Designed for both precision mastering and creative mixing, Omni-Q provides unparalleled control over your audio with sleek, modern vector-based graphics and uncompromising DSP quality.
+**AxisEQ** is a professional-grade, high-performance parametric dynamic equalizer audio plugin built with JUCE. Designed for both precision mastering and creative mixing, AxisEQ provides unparalleled control over your audio with sleek, modern vector-based graphics and uncompromising DSP quality.
 
 ## ✨ Key Features
 
@@ -27,7 +27,7 @@ For an automatic installation into REAPER or your VST3 host of choice:
 
 ## 💻 Manual Build Instructions
 
-Omni-Q uses **CMake** and **JUCE 8**.
+AxisEQ uses **CMake** and **JUCE 8**.
 
 ```bash
 # Generate project files

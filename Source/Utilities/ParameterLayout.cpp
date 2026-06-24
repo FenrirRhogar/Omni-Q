@@ -1,7 +1,7 @@
 #include "ParameterLayout.h"
 #include "Constants.h"
 
-namespace OmniQ
+namespace AxisEQ
 {
 
 juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
@@ -218,4 +218,4 @@ juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
     return layout;
 }
 
-} // namespace OmniQ
+} // namespace AxisEQ

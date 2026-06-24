@@ -1,7 +1,7 @@
 #include "PresetManager.h"
 #include "Constants.h"
 
-namespace OmniQ
+namespace AxisEQ
 {
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -160,14 +160,14 @@ void PresetManager::applyPreset(const Preset& p)
 juce::File PresetManager::getUserPresetsDirectory() const
 {
     auto dir = juce::File::getSpecialLocation(juce::File::userDocumentsDirectory)
-                   .getChildFile("OmniQ").getChildFile("Presets");
+                   .getChildFile("AxisEQ").getChildFile("Presets");
     dir.createDirectory();
     return dir;
 }
 
 juce::XmlElement* PresetManager::presetToXml(const Preset& p)
 {
-    auto* root = new juce::XmlElement("OmniQPreset");
+    auto* root = new juce::XmlElement("AxisEQPreset");
     root->setAttribute("name",     p.name);
     root->setAttribute("category", p.category);
 
@@ -196,7 +196,7 @@ juce::XmlElement* PresetManager::presetToXml(const Preset& p)
 
 bool PresetManager::xmlToPreset(const juce::XmlElement& xml, Preset& out)
 {
-    if (! xml.hasTagName("OmniQPreset")) return false;
+    if (! xml.hasTagName("AxisEQPreset")) return false;
 
     out.name     = xml.getStringAttribute("name",     "Unnamed");
     out.category = xml.getStringAttribute("category", "User");
@@ -469,4 +469,4 @@ void PresetManager::buildFactoryPresets()
     }
 }
 
-} // namespace OmniQ
+} // namespace AxisEQ

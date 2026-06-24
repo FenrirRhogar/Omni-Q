@@ -4,7 +4,7 @@
 #include "../PluginProcessor.h"
 #include "SpectrumAnalyzer.h"
 
-namespace OmniQ
+namespace AxisEQ
 {
 
 /// FabFilter Pro-Q style interactive EQ canvas.
@@ -20,7 +20,7 @@ namespace OmniQ
 class EQCurveComponent : public juce::Component, public juce::Timer
 {
 public:
-    EQCurveComponent(OmniQAudioProcessor& p, SpectrumAnalyzer& analyzer);
+    EQCurveComponent(AxisEQAudioProcessor& p, SpectrumAnalyzer& analyzer);
     ~EQCurveComponent() override;
 
     void paint(juce::Graphics& g) override;
@@ -44,7 +44,7 @@ public:
     static float getGainForPosition     (float y,     float height);
 
 private:
-    OmniQAudioProcessor& processor;
+    AxisEQAudioProcessor& processor;
     SpectrumAnalyzer&    analyzer;
 
     // ── Drawing ───────────────────────────────────────────────────────────
@@ -85,4 +85,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EQCurveComponent)
 };
 
-} // namespace OmniQ
+} // namespace AxisEQ

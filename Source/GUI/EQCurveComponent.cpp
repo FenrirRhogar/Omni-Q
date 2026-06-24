@@ -2,7 +2,7 @@
 #include "../DSP/FilterProcessor.h"
 #include <complex>
 
-namespace OmniQ
+namespace AxisEQ
 {
 
 //──────────────────────────────────────────────────────────────────────────────
@@ -22,7 +22,7 @@ namespace
 }
 
 //──────────────────────────────────────────────────────────────────────────────
-EQCurveComponent::EQCurveComponent(OmniQAudioProcessor& p, SpectrumAnalyzer& a)
+EQCurveComponent::EQCurveComponent(AxisEQAudioProcessor& p, SpectrumAnalyzer& a)
     : processor(p), analyzer(a)
 {
     lastInputSpectrum.fill(-100.0f);
@@ -597,4 +597,4 @@ float EQCurveComponent::getGainForPosition(float y, float height)
     return (height * 0.5f - y) / (height * 0.5f) * GainScale;
 }
 
-} // namespace OmniQ
+} // namespace AxisEQ

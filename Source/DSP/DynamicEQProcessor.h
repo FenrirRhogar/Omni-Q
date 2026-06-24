@@ -3,7 +3,7 @@
 #include <JuceHeader.h>
 #include <vector>
 
-namespace OmniQ
+namespace AxisEQ
 {
 
 struct DynamicEQBandParameters
@@ -72,4 +72,4 @@ private:
     double cosW0 = 0.0;
 };
 
-} // namespace OmniQ
+} // namespace AxisEQ

@@ -9,13 +9,13 @@
 #include "DSP/DynamicEQProcessor.h"
 
 //==============================================================================
-/// OmniQ audio processor — manages 24 independent parametric EQ bands,
+/// AxisEQ audio processor — manages 24 independent parametric EQ bands,
 /// a lock-free spectrum analyzer FIFO, and full APVTS state persistence.
-class OmniQAudioProcessor final : public juce::AudioProcessor
+class AxisEQAudioProcessor final : public juce::AudioProcessor
 {
 public:
-    OmniQAudioProcessor();
-    ~OmniQAudioProcessor() override;
+    AxisEQAudioProcessor();
+    ~AxisEQAudioProcessor() override;
 
     //==========================================================================
     // juce::AudioProcessor overrides
@@ -51,12 +51,12 @@ public:
     juce::AudioProcessorValueTreeState apvts;
 
     /// Cached parameter pointers for every band, bound once at construction.
-    std::array<OmniQ::FilterBandParameters, OmniQ::MaxBands> bandParams;
+    std::array<AxisEQ::FilterBandParameters, AxisEQ::MaxBands> bandParams;
 
     /// Lock-free FIFOs feeding the spectrum analyzer.
     /// Index 0 = left channel, index 1 = right channel.
-    OmniQ::SingleChannelSampleFifo<float> inputFifo[2];
-    OmniQ::SingleChannelSampleFifo<float> outputFifo[2];
+    AxisEQ::SingleChannelSampleFifo<float> inputFifo[2];
+    AxisEQ::SingleChannelSampleFifo<float> outputFifo[2];
 
     /// Current playback sample rate (safe to read from any thread after prepare).
     double getSampleRate() const noexcept { return currentSampleRate; }
@@ -64,7 +64,7 @@ public:
     /// Read the current dynamic gain reduction for GUI visual feedback.
     float getDynamicGainDb(int bandIndex) const noexcept 
     { 
-        if (bandIndex >= 0 && bandIndex < OmniQ::MaxBands)
+        if (bandIndex >= 0 && bandIndex < AxisEQ::MaxBands)
             return dynamicBands[static_cast<size_t>(bandIndex)].getCurrentDynGainDb();
         return 0.0f;
     }
@@ -74,11 +74,11 @@ private:
     int    currentBlockSize   = 512;
 
     // Static EQ Processors (one per channel per band)
-    std::array<OmniQ::CascadedBiquad, OmniQ::MaxBands> leftStaticBands;
-    std::array<OmniQ::CascadedBiquad, OmniQ::MaxBands> rightStaticBands;
+    std::array<AxisEQ::CascadedBiquad, AxisEQ::MaxBands> leftStaticBands;
+    std::array<AxisEQ::CascadedBiquad, AxisEQ::MaxBands> rightStaticBands;
     
     // Dynamic EQ Processors (each can handle stereo internally)
-    std::array<OmniQ::DynamicEQProcessor, OmniQ::MaxBands> dynamicBands;
+    std::array<AxisEQ::DynamicEQProcessor, AxisEQ::MaxBands> dynamicBands;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OmniQAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AxisEQAudioProcessor)
 };

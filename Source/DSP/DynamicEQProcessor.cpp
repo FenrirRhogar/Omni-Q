@@ -2,7 +2,7 @@
 #include <cmath>
 #include <algorithm>
 
-namespace OmniQ
+namespace AxisEQ
 {
 
 DynamicEQProcessor::DynamicEQProcessor()
@@ -229,4 +229,4 @@ float DynamicEQProcessor::processSample(int channel, float input, float sidechai
     return static_cast<float>(y);
 }
 
-} // namespace OmniQ
+} // namespace AxisEQ

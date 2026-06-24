@@ -3,7 +3,7 @@
 #include <JuceHeader.h>
 #include <vector>
 
-namespace OmniQ
+namespace AxisEQ
 {
 
 /// Per-band parameter data for a preset — plain POD, easy to construct.
@@ -37,7 +37,7 @@ struct Preset
 
 /// Manages factory and user presets.
 /// Factory presets are hard-coded in the .cpp.
-/// User presets are stored as .xml files in ~/Documents/OmniQ/Presets/.
+/// User presets are stored as .xml files in ~/Documents/AxisEQ/Presets/.
 class PresetManager
 {
 public:
@@ -86,4 +86,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PresetManager)
 };
 
-} // namespace OmniQ
+} // namespace AxisEQ

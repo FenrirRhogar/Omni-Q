@@ -1,7 +1,7 @@
 #include "SpectrumAnalyzer.h"
 #include <algorithm>
 
-namespace OmniQ
+namespace AxisEQ
 {
 
 SpectrumAnalyzer::SpectrumAnalyzer(SingleChannelSampleFifo<float>* inFifos, 
@@ -127,4 +127,4 @@ void SpectrumAnalyzer::processFifo(SingleChannelSampleFifo<float>& fifo, int cha
     }
 }
 
-} // namespace OmniQ
+} // namespace AxisEQ

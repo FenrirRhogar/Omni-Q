@@ -9,31 +9,31 @@
 #include "Utilities/PresetManager.h"
 
 //==============================================================================
-/// OmniQ top-level editor. Owns:
+/// AxisEQ top-level editor. Owns:
 ///   - TopBarComponent  (logo | preset browser | output gain | bypass)
 ///   - EQCurveComponent (spectrum + interactive curve + nodes)
 ///   - ControlPanelComponent (per-band strip, docked at the bottom)
-class OmniQAudioProcessorEditor final : public juce::AudioProcessorEditor
+class AxisEQAudioProcessorEditor final : public juce::AudioProcessorEditor
 {
 public:
-    explicit OmniQAudioProcessorEditor(OmniQAudioProcessor&);
-    ~OmniQAudioProcessorEditor() override;
+    explicit AxisEQAudioProcessorEditor(AxisEQAudioProcessor&);
+    ~AxisEQAudioProcessorEditor() override;
 
     void paint(juce::Graphics&) override;
     void resized() override;
 
 private:
-    OmniQAudioProcessor& processorRef;
+    AxisEQAudioProcessor& processorRef;
 
     // ── Preset system ────────────────────────────────────────────────────
-    std::unique_ptr<OmniQ::PresetManager> presetManager;
+    std::unique_ptr<AxisEQ::PresetManager> presetManager;
 
     // ── Spectrum thread ──────────────────────────────────────────────────
-    std::unique_ptr<OmniQ::SpectrumAnalyzer> analyzer;
-    std::unique_ptr<OmniQ::EQCurveComponent> eqCurve;
-    std::unique_ptr<OmniQ::ControlPanelComponent> controlPanel;
+    std::unique_ptr<AxisEQ::SpectrumAnalyzer> analyzer;
+    std::unique_ptr<AxisEQ::EQCurveComponent> eqCurve;
+    std::unique_ptr<AxisEQ::ControlPanelComponent> controlPanel;
 
-    OmniQ::CustomLookAndFeel customLookAndFeel;
+    AxisEQ::CustomLookAndFeel customLookAndFeel;
 
     // ── Top-bar UI components ─────────────────────────────────────────────
     juce::ComboBox presetCombo;
@@ -55,5 +55,5 @@ private:
 
     void paintBackground(juce::Graphics& g);
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OmniQAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AxisEQAudioProcessorEditor)
 };

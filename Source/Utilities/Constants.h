@@ -4,7 +4,7 @@
 #include <array>
 #include <cstdint>
 
-namespace OmniQ
+namespace AxisEQ
 {
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -186,4 +186,4 @@ inline const std::array<juce::Colour, MaxBands> BandColours = {{
     juce::Colour(0xFF448aff), juce::Colour(0xFFd500f9), juce::Colour(0xFFff1744)
 }};
 
-} // namespace OmniQ
+} // namespace AxisEQ

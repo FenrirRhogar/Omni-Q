@@ -4,7 +4,7 @@
 #include "Utilities/Constants.h"
 #include <atomic>
 
-namespace OmniQ
+namespace AxisEQ
 {
 
 /// Holds cached pointers to the raw atomic parameter values for one EQ band.
@@ -174,4 +174,4 @@ struct FilterBandParameters
     }
 };
 
-} // namespace OmniQ
+} // namespace AxisEQ

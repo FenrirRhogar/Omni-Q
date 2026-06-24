@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(OmniQ VERSION 1.0.0 LANGUAGES CXX)
+project(AxisEQ VERSION 1.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -22,27 +22,27 @@ endif()
 # ──────────────────────────────────────────────────────────────────────────────
 # Plugin target
 # ──────────────────────────────────────────────────────────────────────────────
-juce_add_plugin(OmniQ
+juce_add_plugin(AxisEQ
     COMPANY_NAME             "fenrikos"
-    BUNDLE_ID                "com.omniaudio.OmniQ"
+    BUNDLE_ID                "com.Axisaudio.AxisEQ"
     IS_SYNTH                 FALSE
     NEEDS_MIDI_INPUT         FALSE
     NEEDS_MIDI_OUTPUT        FALSE
     IS_MIDI_EFFECT           FALSE
     EDITOR_WANTS_KEYBOARD_FOCUS FALSE
-    PLUGIN_MANUFACTURER_CODE Omni
-    PLUGIN_CODE              Omnq
+    PLUGIN_MANUFACTURER_CODE Axis
+    PLUGIN_CODE              AxEq
     FORMATS                  VST3 AU Standalone
-    PRODUCT_NAME             "Omni-Q"
+    PRODUCT_NAME             "AxisEQ"
     COPY_PLUGIN_AFTER_BUILD  FALSE
 )
 
-juce_generate_juce_header(OmniQ)
+juce_generate_juce_header(AxisEQ)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Source files  (add new .cpp files here as phases are implemented)
 # ──────────────────────────────────────────────────────────────────────────────
-target_sources(OmniQ PRIVATE
+target_sources(AxisEQ PRIVATE
     Source/PluginProcessor.cpp
     Source/PluginEditor.cpp
     Source/Utilities/ParameterLayout.cpp
@@ -55,7 +55,7 @@ target_sources(OmniQ PRIVATE
     Source/GUI/CustomLookAndFeel.cpp
 )
 
-target_include_directories(OmniQ
+target_include_directories(AxisEQ
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/Source
 )
@@ -63,7 +63,7 @@ target_include_directories(OmniQ
 # ──────────────────────────────────────────────────────────────────────────────
 # Compile definitions
 # ──────────────────────────────────────────────────────────────────────────────
-target_compile_definitions(OmniQ
+target_compile_definitions(AxisEQ
     PUBLIC
         JUCE_WEB_BROWSER=0
         JUCE_USE_CURL=0
@@ -73,7 +73,7 @@ target_compile_definitions(OmniQ
 # ──────────────────────────────────────────────────────────────────────────────
 # Linked JUCE modules
 # ──────────────────────────────────────────────────────────────────────────────
-target_link_libraries(OmniQ
+target_link_libraries(AxisEQ
     PRIVATE
         juce::juce_audio_basics
         juce::juce_audio_devices

@@ -1,7 +1,7 @@
 #pragma once
 #include <JuceHeader.h>
 
-namespace OmniQ
+namespace AxisEQ
 {
 
 class CustomLookAndFeel : public juce::LookAndFeel_V4
@@ -34,4 +34,4 @@ private:
     juce::Typeface::Ptr customTypeface;
 };
 
-} // namespace OmniQ
+} // namespace AxisEQ
